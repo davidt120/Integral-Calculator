@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Integral Calculator</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <!-- Convert the integral expression to latex and beautiful math -->
+  <link rel="stylesheet" href="mathquill.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script src="mathquill.js"></script>
+  <!--solve the integral -->
+  <script src="nerdamer.core.js"></script>
+  <script src="Algebra.js"></script>
+  <script src="Calculus.js"></script>
+  <script src="Solve.js"></script>
+  <script src="Extra.js"></script>
+  <style>
+    #form{
+     
+      font-size: 16px;
+    }
+    #symbolpan{
+      background:#fff;
+      border: 1px solid grey;
+      border-radius: 5px;
+    }
+    table, th, td {
+    border: 1px solid #eee;
+    border-radius: 3px;
+    }
+    td{
+      background-color: #f8f8f8;
+      width: 52px;
+      height: 31px;
+      text-align: center;     
+      border: 1px solid #000;
+    }
+    td:hover{
+      cursor: pointer;
+      background-color: white;
+    }
+    #outpane{
+      border: 1px solid #000;
+      border-radius: 5px;
+      background-color: #fff;
+    }
+    #output, #outputsec, #outputthird{
+      background-color: #fff;      
+      padding: 8px 20px 8px 12px;
+    }
+    #math-field{
+      width: 300px;
+      
+      padding: 8px 40px 12px 12px;
+      background-color: #fff;
+      border: 1px solid #000;
+      border-radius: 5px;
+    }
+
+   sup{
+     top:-0.3em;
+   }
+   .calculation{
+     border-radius: 5px; 
+     
+      }
+  </style> 
+</head>
+<body>
+  <div id="form" class="bg-success container">
+    <h1 class="text-primary"><b>Welcome to Integration Calculator</b></h1><hr/>
+    <div class="row">
+      <div class ="col-lg-6">
+        <p class="text-info"><b>Click to use this pad.</b></p>
+        <table cellpadding="5" >
+            <tr>
+              <td><span id="problem" onclick="integral()">\int</span></td>
+              <td><span id="fill-in-the-blank" onclick="pro()">\int_{\square}^{\square}</span></td>
+              <td><span id="square" onclick="sq()">x^2</span></td>
+              <td><span id="nsquare" onclick="nsq()">x^{\square}</span></td>
+              <td><span id="root_sym" onclick="root()">\sqrt{\square}</span></td>
+              <td><span id="nroot_sym" onclick="nroot()">\sqrt[\square]{\square}</span></td>
+              <td><span id="fraction" onclick="divide()">\frac{b}{a}</span></td>
+              <td><span id="pai" onclick="pei()">\pi</span></td>
+            </tr> 
+          </table>
+      </div>
+    </div>
+    <section class="row">    
+      <p class="text-danger">Please try <span id="example">\int(t+1)^2dt</span>  or  <span id="example_two">\int_{0}^{5}(x+1)^2dx!</span></p>
+      <p><b>Type math equation here, and press Enter or click the Calculate button.</b></p>
+      <span id="math-field"></span>
+      <input type="button" class="btn btn-success" value="Calculate" onclick="calculate()">
+      <p>LaTeX of what you typed: <span id="latex"></span></p> 
+      <p class="bg-info"><i>Note: log(a)=ln(a), log(1)=ln(1)=0, log(-a)=null</i></p>  
+        <p class="text-success">The output is:</p>
+        <div id="outpane" class="col-lg-6">
+            <p id="output"></p><br>
+            <p id="outputsec"></p><br>
+            <p id="outputthird"></p>
+        </div>
+                        
+    </section>
+    <section class="row">
+      <div class=" bg-col-lg-6">
+        <h3 class="text-primary">Examples(Click this integral to get the solution!)</h3>
+        <ul>
+          <li><span id="ex_1" onclick="exam_1()">\int_{-3}^1\left(6x^2-5x+2\right)dx</span><span id="sol_1">\longleftarrow</span></li>
+          <li><span id="ex_2" onclick="exam_2()">\int _4^0\sqrt{t}\left(t-2\right)dt</span><span id="sol_2">\longleftarrow</span></li>
+          <li><span id="ex_3" onclick="exam_3()">\int _1^2\frac{2w^5-w+3}{w^2}dw</span><span id="sol_3">\longleftarrow</span></li>
+          <li><span id="ex_4"onclick="exam_4()">\int _{25}^{-10}dR</span><span id="sol_4">\longleftarrow</span></li>
+          <li><span id="ex_5"onclick="exam_5()">\int_0^1\left(4x-6\sqrt[3]{x^2}\right)dx</span><span id="sol_5">\longleftarrow</span></li>
+          <li><span id="ex_6"onclick="exam_6()">\int_0^{\frac{\pi}{3}}\left(2\sin\left(x\right)-5\cos\left(x\right)\right)dx</span><span id="sol_6">\longleftarrow</span></li>
+          <li><span id="ex_7"onclick="exam_7()">\int_{\frac{\pi}{6}}^{\frac{\pi}{4}}\left(5-2\sec\left(z\right)\tan\left(z\right)\right)dz</span><span id="sol_7">\longleftarrow</span></li>
+          <li><span id="ex_8"onclick="exam_8()">\int_{-20}^{-1}\left(\frac{3}{e^{-z}}-\frac{1}{3z}\right)dz</span><span id="sol_8">\longleftarrow</span></li>
+        </ul>
+
+        </div>
+      </div>
+    </section> 
+  </div>     
+    
+    <script>
+    var mathFieldSpan = document.getElementById('math-field');
+    var latexSpan = document.getElementById('latex');
+    
+    var MQ = MathQuill.getInterface(2); // for backcompat
+    var mathField = MQ.MathField(mathFieldSpan, {
+      spaceBehavesLikeTab: true, // configurable
+      handlers: {
+        edit: function() { // useful event handlers
+          latexSpan.textContent = mathField.latex();                 
+        }        
+      }    
+    });
+    </script>
+    <script>
+       $("#math-field").keydown(function(e) {
+          var b = (e.charCode) ? e.charCode : e.keyCode;
+          if (e.keyCode == 13) {
+            calculate();
+          }
+        });
+        var problemSpan = document.getElementById('problem');        
+        var output = document.getElementById('output');
+        var outputse = document.getElementById('outputsec');
+        var outputth = document.getElementById('outputthird');     
+        MQ.StaticMath(problemSpan);       
+             
+        function integral(){
+          mathField.write('\\int dx');
+          mathField.focus();        
+        }
+        function pro(){
+          mathField.write('\\int_{}^{}dx');
+          mathField.focus();
+        }
+        function sq(){
+          mathField.write('^2');
+          mathField.focus();
+        }
+        function nsq(){
+          mathField.write('^{}');
+          mathField.focus();
+        }
+        function root(){
+          mathField.write('\\sqrt{}');
+          mathField.focus();
+        }
+        function nroot(){
+          mathField.write('\\sqrt[]{}');
+          mathField.focus();
+        }
+        function divide(){
+          mathField.write('\\frac{}{}');
+          mathField.focus();
+        }
+        function pei(){
+          mathField.write('\\pi');
+          mathField.focus();
+        }
+        function exam_1(){
+          mathField.write('\\int_{-3}^1\\left(6x^2-5x+2\\right)dx');
+          mathField.focus();
+        }
+        function exam_2(){
+          mathField.write('\\int_4^0\\left(\\sqrt{t}\\left(t-2\\right)\\right)dt');
+          mathField.focus();
+        }
+        function exam_3(){
+          mathField.write('\\int_1^2\\left(\\frac{2w^5-w+3}{w^2}\\right)dw');
+          mathField.focus();
+        }
+        function exam_4(){
+          mathField.write('\\int _{25}^{-10}dR');
+          mathField.focus();
+        }
+        function exam_5(){
+          mathField.write('\\int_0^1\\left(4x-6\\sqrt[3]{x^2}\\right)dx');
+          mathField.focus();
+        }
+        function exam_6(){
+          mathField.write('\\int_0^{\\frac{\\pi}{3}}\\left(2\\sin\\left(x\\right)-5\\cos\\left(x\\right)\\right)dx');
+          mathField.focus();
+        }
+        function exam_7(){
+          mathField.write('\\int_{\\frac{\\pi}{6}}^{\\frac{\\pi}{4}}\\left(5-2\\sec\\left(z\\right)\\tan\\left(z\\right)\\right)dz');
+          mathField.focus();          
+        }
+        function exam_8(){
+          mathField.write('\\int_{-20}^{-1}\\left(\\frac{3}{e^{-z}}-\\frac{1}{3z}\\right)dz');
+          mathField.focus();
+        }
+        var fillInTheBlank = MQ.StaticMath(document.getElementById('fill-in-the-blank'));
+        var example = MQ.StaticMath(document.getElementById('example'));
+        var example_two = MQ.StaticMath(document.getElementById('example_two'));
+        var square = MQ.StaticMath(document.getElementById('square'));
+        var nsquare =MQ.StaticMath(document.getElementById('nsquare'));
+        var rot = MQ.StaticMath(document.getElementById('root_sym'));
+        var nrot = MQ.StaticMath(document.getElementById('nroot_sym'));
+        var fraction =MQ.StaticMath(document.getElementById('fraction'));
+        var pai =MQ.StaticMath(document.getElementById('pai'));
+        var ex_first =MQ.StaticMath(document.getElementById('ex_1'));
+        var ex_second =MQ.StaticMath(document.getElementById('ex_2'));
+        var ex_third =MQ.StaticMath(document.getElementById('ex_3'));
+        var ex_fourth =MQ.StaticMath(document.getElementById('ex_4'));
+        var ex_fifth =MQ.StaticMath(document.getElementById('ex_5'));
+        var ex_sixth =MQ.StaticMath(document.getElementById('ex_6'));
+        var ex_seventh =MQ.StaticMath(document.getElementById('ex_7'));
+        var ex_eighth =MQ.StaticMath(document.getElementById('ex_8'));
+        var sol_first =MQ.StaticMath(document.getElementById('sol_1'));
+        var sol_second =MQ.StaticMath(document.getElementById('sol_2'));
+        var sol_third =MQ.StaticMath(document.getElementById('sol_3'));
+        var sol_fourth =MQ.StaticMath(document.getElementById('sol_4'));
+        var sol_fifth =MQ.StaticMath(document.getElementById('sol_5'));
+        var sol_sixth =MQ.StaticMath(document.getElementById('sol_6'));
+        var sol_seventh =MQ.StaticMath(document.getElementById('sol_7'));
+        var sol_eighth =MQ.StaticMath(document.getElementById('sol_8'));
+
+        function calculate(){
+          var ns = nerdamer('sin(pi/2)+1');        
+          document.getElementById("output").innerHTML = "";
+            document.getElementById("outputsec").innerHTML ="";
+            document.getElementById("outputthird").innerHTML ="";      
+          var t = latexSpan.textContent;
+          u = t.toString();                  
+          sr = u.split("d",2);
+          char = sr[1];
+          var remain =u.replace(/int_|[\\]|d\S|left|right/g, "");
+          var frac_remain = remain;                         
+          if(u.includes("int") && !u.includes("int_")){
+            if(remain.includes("frac")){
+               remain = remain.replace(/frac/g,"").replace(/}{/g,")/(").replace(/{/g,"(").replace(/}/g,")");                         
+          }
+          if(remain.includes("sqrt[")){              
+              st = remain.split("sqrt[",2);
+              sr = st[1].split("]",2);
+              n = sr[0];
+              sw = sr[1].split("}",2);
+              origin = sw[0]+"}";
+              original = sw[0].replace("{","(")+")";
+              nthroot = "sqrt["+n.toString()+"]"+origin.toString();             
+              inst = original.toString()+"^(1/"+n.toString()+")";       
+              remain = remain.replace(nthroot,inst);                                       
+            }          
+            var some =remain.replace(/int|[\\]|dx|left|right|{|}/g, "");                                      
+            convert_remain = some.toString();                      
+            if (convert_remain===" "){
+              convert_remain ="1";
+            }
+            if(convert_remain.includes(" ")){
+              convert_remain = convert_remain.replace(" ","");
+            }                          
+            var x = nerdamer('integrate('+convert_remain+','+char+')').toString()+"+C";
+            document.getElementById("output").innerHTML = u+"="+nerdamer.convertToLaTeX(x);
+            MQ.StaticMath(output);         
+          }
+          else if(u.includes("int_")){ 
+            /*if(remain.includes("frac")){
+               remain = remain.replace(/frac/g,"").replace(/}{/g,")/(").replace(/{/g,"(").replace(/}/g,")");                         
+          }*/                                   
+            //var some = remain.replace(/int_|[\\]|left|right|{|}/g, "");
+            //nerdamer.setConstant("pi",22/7);
+                       
+            var some = u.replace(/int_|[\\]|d\S|left|right/g, "");
+            asome = some.split("^",2);
+            coeff_1 = asome[0];
+            bsome = asome[1].split("(",2);           
+            coeff_2 = bsome[0];
+            some = frac_as(some);
+            coeff_1 = frac_as(coeff_1);
+            coeff_2 = frac_as(coeff_2);
+            coefficents = coeff_1+"^"+coeff_2;
+            equations = some.replace(coefficents,"")
+            equations = frac_as(equations);                     
+            if(equations.includes("sqrt[")){              
+              st = equations.split("sqrt[",2);
+              sr = st[1].split("]",2);
+              n = sr[0];
+              sw = sr[1].split(")",2);            
+              original = sw[0]+")";
+              nthroot = "sqrt["+n.toString()+"]"+original.toString();             
+              inst = original.toString()+"^(1/"+n.toString()+")";       
+              equations = equations.replace(nthroot,inst);                                                     
+            }                                  
+            convert_remain = some.toString();                   
+            if (equations===""){
+              equation = "(1)";
+            }
+            else{
+              equation = equations;
+            }
+            from_coeff = coeff_1;
+            to_coeff =coeff_2;          
+            real_str = equation.toString(); 
+            integration = nerdamer('integrate('+real_str+','+char+')').toString();
+            coeffs = new RegExp(char,"g");          
+            to_coeffs = integration.replace(coeffs,to_coeff);            
+            tocoeffs = nerdamer.convertToLaTeX(to_coeffs);
+            from_coeffs = integration.replace(coeffs, from_coeff);            
+            asa = to_coeffs+"-("+from_coeffs+")";
+            if(asa.includes("sin(0)")){
+              asa = asa.replace(/sin\(0\)/g,"0");              
+            }
+            if(asa.includes("cos(0)")){
+                asa = asa.replace(/cos\(0\)/g, "1");
+              }
+            if(asa.includes("log(1)")){
+              asa = asa.replace(/log\(1\)/g, "0");
+            }
+            if(asa.includes("log((-1))")){
+              asa = asa.replace(/log\(\(\-1\)\)/g, "0");
+            }
+            fromcoeffs = nerdamer.convertToLaTeX(from_coeffs);
+            var result = nerdamer(asa).toString();            
+            if(result.includes("log(-20)")){
+              result =result.replace("log(-20)", "log(20)");
+            }    
+                      
+            results = nerdamer.convertToLaTeX(result);            
+            if(results.includes("log")){
+              results = results.replace(/log/g, "ln");             
+              if(results.includes("ln(-")){
+                results = results.replace(/ln\(\-/g,"ln(");
+              }
+            }
+            document.getElementById("output").innerHTML = u;
+            document.getElementById("outputsec").innerHTML ="=("+tocoeffs+")-("+fromcoeffs+")";
+            document.getElementById("outputthird").innerHTML ="="+results ;            
+            MQ.StaticMath(output);
+            MQ.StaticMath(outputse);
+            MQ.StaticMath(outputth);
+                  
+          }
+        }
+        function frac_as(d){
+          if(d.includes("frac")){
+               e = d.replace(/frac/g,"").replace(/}{/g,")/(").replace(/{/g,"(").replace(/}/g,")");
+          }
+          else if(d.includes("{")){
+            e=d.replace(/{/g, "(").replace(/}/g,")");
+          }
+          else{
+            e =d;
+          }                    
+          return e.toString();
+        }
+        
+      </script>
+</body>
+</html>
